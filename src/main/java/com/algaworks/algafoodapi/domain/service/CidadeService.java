@@ -1,16 +1,16 @@
 package com.algaworks.algafoodapi.domain.service;
 
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+
 import com.algaworks.algafoodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafoodapi.domain.model.Cidade;
 import com.algaworks.algafoodapi.domain.model.Estado;
 import com.algaworks.algafoodapi.domain.repository.CidadeRepository;
 import com.algaworks.algafoodapi.domain.repository.EstadoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CidadeService {

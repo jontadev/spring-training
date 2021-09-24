@@ -1,15 +1,14 @@
 package com.algaworks.algafoodapi.domain.service;
 
-import com.algaworks.algafoodapi.domain.exception.EntidadeEmUsoException;
-import com.algaworks.algafoodapi.domain.exception.EntidadeNaoEncontradaException;
-import com.algaworks.algafoodapi.domain.model.Estado;
-import com.algaworks.algafoodapi.domain.repository.EstadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.algaworks.algafoodapi.domain.exception.EntidadeEmUsoException;
+import com.algaworks.algafoodapi.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafoodapi.domain.model.Estado;
+import com.algaworks.algafoodapi.domain.repository.EstadoRepository;
 
 @Service
 public class EstadoService {
