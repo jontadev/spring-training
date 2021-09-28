@@ -1,18 +1,19 @@
 package com.algaworks.algafoodapi.api.controller;
 
-import com.algaworks.algafoodapi.domain.model.Cozinha;
-import com.algaworks.algafoodapi.domain.model.Restaurante;
-import com.algaworks.algafoodapi.domain.repository.CozinhaRepository;
-import com.algaworks.algafoodapi.domain.repository.RestauranteRepository;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
+import com.algaworks.algafoodapi.domain.model.Cozinha;
+import com.algaworks.algafoodapi.domain.model.Restaurante;
+import com.algaworks.algafoodapi.domain.repository.CozinhaRepository;
+import com.algaworks.algafoodapi.domain.repository.RestauranteRepository;
 
 @RequestMapping("/teste")
 @RestController
@@ -43,7 +44,7 @@ public class TesteController {
     @GetMapping("/restaurantes/por-nome")
     public List<Restaurante> restaurantePorNomeECozinhaId(
             @RequestParam("nome") String nome, @RequestParam("cozinhaId") Long cozinhaId) {
-        return restauranteRepository.consultarPorNome(nome, cozinhaId);
+        return restauranteRepository.findComFreteGratis(nome);
     }
 
     @GetMapping("/restaurantes/primeiro-por-nome")
@@ -67,9 +68,20 @@ public class TesteController {
     }
 
     @GetMapping("/restaurantes/por-nome-e-frete")
-    public List<Restaurante> restaurantesPorNomeEFrete(@RequestParam("nome") String nome,
-                                         @RequestParam("taxaFreteInicial") BigDecimal taxaFreteInicial,
-                                         @RequestParam("taxaFreteFinal") BigDecimal taxaFreteFinal) {
+    public List<Restaurante> restaurantesPorNomeEFrete(@RequestParam(value = "nome", required = false) String nome,
+                                         @RequestParam(value = "taxaFreteInicial", required = false) BigDecimal taxaFreteInicial,
+                                         @RequestParam(value = "taxaFreteFinal", required = false) BigDecimal taxaFreteFinal) {
         return restauranteRepository.find(nome, taxaFreteInicial, taxaFreteFinal);
     }
+    
+    @GetMapping("/restaurantes/com-frete-gratis")
+    public List<Restaurante> restaraurantesComFreteGratis(@RequestParam(value = "nome") String nome) {
+    	return restauranteRepository.findComFreteGratis(nome);
+    }
+    
+    @GetMapping("/restaurantes/primeiro")
+    public Optional<Restaurante> buscarPrimeiro() {
+    	return restauranteRepository.buscarPrimeiro();
+    }
+
 }
