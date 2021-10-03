@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafoodapi.domain.exception.CozinhaNaoEncontradaException;
+import com.algaworks.algafoodapi.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafoodapi.domain.exception.NegocioException;
 import com.algaworks.algafoodapi.domain.model.Restaurante;
 import com.algaworks.algafoodapi.domain.service.RestauranteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,25 +45,30 @@ public class RestauranteController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Restaurante adicionar(@RequestBody Restaurante restaurante) {
-		return restauranteService.salvar(restaurante);
+		try {
+			return restauranteService.salvar(restaurante);
+		} catch (CozinhaNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
 	}
 
 	@PutMapping("/{id}")
 	public Restaurante atualizar(@RequestBody Restaurante restaurante, @PathVariable("id") Long restauranteId) {
-		Restaurante restauranteAtual = restauranteService.buscar(restauranteId);
-
-		BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasDePagamento", "endereco",
-				"dataCadastro", "produtos");
-		
-		return restauranteService.salvar(restauranteAtual);
+		try {
+			Restaurante restauranteAtual = restauranteService.buscar(restauranteId);
+			BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasDePagamento", "endereco",
+					"dataCadastro", "produtos");
+			
+			return restauranteService.salvar(restauranteAtual);
+		} catch (CozinhaNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
 	}
 
 	@PatchMapping("/{id}")
 	public Restaurante atualizarParcial(@PathVariable("id") Long restauranteId,
 			@RequestBody Map<String, Object> campos) {
 		Restaurante restauranteAtual = restauranteService.buscar(restauranteId);
-
-
 		merge(campos, restauranteAtual);
 
 		return atualizar(restauranteAtual, restauranteId);

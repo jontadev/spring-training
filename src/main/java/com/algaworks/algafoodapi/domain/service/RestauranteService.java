@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.algaworks.algafoodapi.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafoodapi.domain.exception.RestauranteNaoEncontradoException;
 import com.algaworks.algafoodapi.domain.model.Cozinha;
 import com.algaworks.algafoodapi.domain.model.Restaurante;
 import com.algaworks.algafoodapi.domain.repository.RestauranteRepository;
@@ -25,8 +25,7 @@ public class RestauranteService {
     
     public Restaurante buscar(Long id) {
     	return restauranteRepository.findById(id)
-    			.orElseThrow(() -> new EntidadeNaoEncontradaException(
-    					String.format("Nao existe um cadastro de restaurante com o código %d", id)));
+    			.orElseThrow(() -> new RestauranteNaoEncontradoException(id));
     }
     
     public Restaurante salvar(Restaurante restaurante) {

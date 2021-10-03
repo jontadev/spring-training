@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafoodapi.domain.exception.EstadoNaoEncontradoException;
+import com.algaworks.algafoodapi.domain.exception.NegocioException;
 import com.algaworks.algafoodapi.domain.model.Cidade;
 import com.algaworks.algafoodapi.domain.service.CidadeService;
 
@@ -35,21 +37,31 @@ public class CidadeController {
 		return cidadeService.buscar(id);
 	}
 
-	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
 	public Cidade adicionar(@RequestBody Cidade cidade) {
-		return cidadeService.salvar(cidade);
+		try {
+			return cidadeService.salvar(cidade);
+		} catch (EstadoNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage());
+		}
 	}
 
 	@PutMapping("/{id}")
 	public Cidade atualizar(@RequestBody Cidade cidade, @PathVariable("id") Long id) {
-		Cidade cidadeAtual = cidadeService.buscar(id);
-		BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-		return cidadeService.salvar(cidadeAtual);
+		try {
+			Cidade cidadeAtual = cidadeService.buscar(id);
+			BeanUtils.copyProperties(cidade, cidadeAtual, "id");
+			
+			return cidadeService.salvar(cidadeAtual);
+		} catch (EstadoNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage());
+		}
+		
 	}
 
-	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable("id") Long id) {
 		cidadeService.remover(id);
 	}
